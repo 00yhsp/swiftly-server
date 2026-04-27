@@ -1,0 +1,23 @@
+name: Task
+description: 작업 내용을 정의합니다.
+title: "[TASK]: "
+labels: ["task"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📌 작업 개요
+        어떤 작업을 진행하는지 간략하게 설명해주세요.
+  - type: checkboxes
+    id: todo
+    attributes:
+      label: "✅ To-do"
+      options:
+        - label: 작업 내용 1
+        - label: 작업 내용 2
+  - type: textarea
+    id: context
+    attributes:
+      label: "📝 참고 사항"
+      description: "참고할 문서나 관련 이슈, 주의사항을 적어주세요."
