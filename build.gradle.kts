@@ -71,6 +71,6 @@ tasks.withType<Test> {
 
 kotlinter {
     reporters = arrayOf("checkstyle", "plain")
-    ignoreFailures.set(false)
-    failBuildOnFormatViolation.set(true)
+    ignoreLintFailures = false
+    ignoreFormatFailures = false
 }
