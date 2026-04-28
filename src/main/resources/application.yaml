@@ -1,3 +1,30 @@
 spring:
   application:
     name: swiftly-server
+  
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:swiftly_db}
+    username: ${DB_USERNAME:swiftly_user}
+    password: ${DB_PASSWORD:swiftly_password}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+  mvc:
+    problemdetails:
+      enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: alpha
+  api-docs:
+    path: /api-docs
+  kotlin:
+    return-nullable-as-required: true
