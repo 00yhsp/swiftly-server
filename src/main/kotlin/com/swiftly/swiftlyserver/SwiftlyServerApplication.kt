@@ -1,3 +1,6 @@
+/*
+ * Swiftly Server Application Entry Point
+ */
 package com.swiftly.swiftlyserver
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
