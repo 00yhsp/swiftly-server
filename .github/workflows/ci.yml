@@ -38,3 +38,6 @@ jobs:
 
       - name: Run build with checks
         run: ./gradlew build
+
+      - name: Build Docker image
+        run: docker build . -t swiftly-server:latest

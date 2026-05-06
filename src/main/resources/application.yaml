@@ -20,7 +20,17 @@ spring:
     problemdetails:
       enabled: true
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
 springdoc:
+  show-actuator: true
   swagger-ui:
     path: /swagger-ui.html
     operations-sorter: alpha

@@ -1,0 +1,23 @@
+.gradle
+build
+out
+.idea
+.kotlin
+bin
+obj
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose*
+
+# Documentation
+*.md
+
+# OS files
+.DS_Store
+Thumbs.db
