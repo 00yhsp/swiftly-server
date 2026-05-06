@@ -1,0 +1,87 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build with Gradle
+        run: ./gradlew bootJar
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/swiftly-server:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            # docker-compose.yml 파일 생성/업데이트
+            cat << 'EOF' > docker-compose.yml
+            services:
+              app:
+                image: ${{ secrets.DOCKERHUB_USERNAME }}/swiftly-server:latest
+                container_name: swiftly-server
+                ports:
+                  - "8080:8080"
+                environment:
+                  - DB_HOST=db
+                  - DB_NAME=swiftly_db
+                  - DB_USERNAME=swiftly_user
+                  - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+                  - SPRING_PROFILES_ACTIVE=prod
+                depends_on:
+                  db:
+                    condition: service_healthy
+
+              db:
+                image: postgres:15-alpine
+                container_name: swiftly-db
+                environment:
+                  POSTGRES_USER: swiftly_user
+                  POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+                  POSTGRES_DB: swiftly_db
+                volumes:
+                  - postgres_data:/var/lib/postgresql/data
+                healthcheck:
+                  test: ["CMD-SHELL", "pg_isready -U swiftly_user -d swiftly_db"]
+                  interval: 5s
+                  timeout: 5s
+                  retries: 5
+
+            volumes:
+              postgres_data:
+            EOF
+            
+            # 컨테이너 실행
+            docker compose pull
+            docker compose up -d

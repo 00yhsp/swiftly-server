@@ -1,0 +1,42 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:5432/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # 운영 환경에서는 스키마를 자동으로 수정하지 않고 검증만 하도록 설정 (안정성)
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+        highlight_sql: false
+
+  mvc:
+    problemdetails:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # 운영 환경에서도 헬스체크는 필요하므로 유지
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  # 운영 환경에서는 보안을 위해 Swagger를 끄는 것이 일반적이지만, 
+  # 필요에 따라 켤 수 있도록 설정 (일단은 노출 최소화)
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true

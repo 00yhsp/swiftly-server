@@ -1,4 +1,18 @@
 services:
+  app:
+    build: .
+    container_name: swiftly-server
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=swiftly_db
+      - DB_USERNAME=swiftly_user
+      - DB_PASSWORD=swiftly_password
+    depends_on:
+      db:
+        condition: service_healthy
+
   db:
     image: postgres:15-alpine
     container_name: swiftly-db
@@ -10,6 +24,11 @@ services:
       POSTGRES_DB: swiftly_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U swiftly_user -d swiftly_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
