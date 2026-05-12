@@ -42,23 +42,17 @@ class ShortVideo(
     var updatedAt: Instant = Instant.now()
 
     @OneToMany(mappedBy = "shortVideo", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val scenes: MutableList<ShortVideoScene> = mutableListOf()
-
-    @OneToMany(mappedBy = "shortVideo", cascade = [CascadeType.ALL], orphanRemoval = true)
     val codeBlocks: MutableList<ShortVideoCodeBlock> = mutableListOf()
 
     fun replaceContent(
         title: String,
         summary: String,
         thumbnailKey: String,
-        scenes: List<ShortVideoScene>,
         codeBlocks: List<ShortVideoCodeBlock>,
     ) {
         this.title = title
         this.summary = summary
         this.thumbnailKey = thumbnailKey
-        this.scenes.clear()
-        this.scenes.addAll(scenes)
         this.codeBlocks.clear()
         this.codeBlocks.addAll(codeBlocks)
         this.updatedAt = Instant.now()

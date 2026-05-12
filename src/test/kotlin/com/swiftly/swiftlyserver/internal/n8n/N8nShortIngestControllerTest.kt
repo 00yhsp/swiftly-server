@@ -2,7 +2,6 @@ package com.swiftly.swiftlyserver.internal.n8n
 
 import com.swiftly.swiftlyserver.shorts.ShortVideoCodeBlockRepository
 import com.swiftly.swiftlyserver.shorts.ShortVideoRepository
-import com.swiftly.swiftlyserver.shorts.ShortVideoSceneRepository
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
@@ -20,7 +19,6 @@ class N8nShortIngestControllerTest
     constructor(
         private val mockMvc: MockMvc,
         private val shortVideoRepository: ShortVideoRepository,
-        private val shortVideoSceneRepository: ShortVideoSceneRepository,
         private val shortVideoCodeBlockRepository: ShortVideoCodeBlockRepository,
     ) : DescribeSpec({
             extension(SpringExtension)
@@ -69,7 +67,6 @@ class N8nShortIngestControllerTest
                     requireNotNull(savedShort)
                     savedShort.title shouldBe "차세대 CarPlay 디자인 시스템을 만나보세요"
                     savedShort.thumbnailKey shouldBe THUMBNAIL_KEY
-                    shortVideoSceneRepository.countByShortVideoVideoKey(VIDEO_KEY) shouldBe 2
                     shortVideoCodeBlockRepository.countByShortVideoVideoKey(VIDEO_KEY) shouldBe 1
                 }
 
@@ -100,7 +97,6 @@ class N8nShortIngestControllerTest
 
                     requireNotNull(updatedShort)
                     updatedShort.title shouldBe "업데이트된 제목"
-                    shortVideoSceneRepository.countByShortVideoVideoKey(VIDEO_KEY) shouldBe 1
                     shortVideoCodeBlockRepository.countByShortVideoVideoKey(VIDEO_KEY) shouldBe 0
                 }
 
@@ -115,15 +111,18 @@ class N8nShortIngestControllerTest
                         }
                 }
 
-                it("scene end_time이 start_time 이하이면 400을 반환한다") {
+                it("codeBlocks가 생략되어도 빈 배열로 저장한다") {
                     mockMvc
                         .post("/internal/n8n/shorts") {
                             header(N8nIngestTokenInterceptor.INGEST_TOKEN_HEADER, "test-ingest-token")
                             contentType = MediaType.APPLICATION_JSON
-                            content = validPayload().replace("\"end_time\": 2.3", "\"end_time\": 0")
+                            content = payloadWithoutCodeBlocks()
                         }.andExpect {
-                            status { isBadRequest() }
+                            status { isOk() }
+                            jsonPath("$.created_count") { value(1) }
                         }
+
+                    shortVideoCodeBlockRepository.countByShortVideoVideoKey(VIDEO_KEY) shouldBe 0
                 }
             }
         }) {
@@ -144,24 +143,6 @@ class N8nShortIngestControllerTest
                         "title": "Sample code",
                         "code": "let carPlay = true"
                       }
-                    ],
-                    "scenes": [
-                      {
-                        "scene_index": 1,
-                        "start_time": 0,
-                        "end_time": 2.3,
-                        "duration": 2.3,
-                        "origin_script": "카플레이가 이렇게까지 달라진다고요?",
-                        "image_url": "https://example.com/scene-1.jpg"
-                      },
-                      {
-                        "scene_index": 2,
-                        "start_time": 2.301,
-                        "end_time": 6.8,
-                        "duration": 4.499,
-                        "origin_script": "오늘은 차세대 카플레이 디자인 시스템을 소개합니다.",
-                        "image_url": "https://example.com/scene-2.jpg"
-                      }
                     ]
                   }
                 ]
@@ -175,17 +156,19 @@ class N8nShortIngestControllerTest
                     "summary": "업데이트된 요약입니다.",
                     "video_key": "$VIDEO_KEY",
                     "thumbnail_key": "$THUMBNAIL_KEY",
-                    "codeBlocks": [],
-                    "scenes": [
-                      {
-                        "scene_index": 1,
-                        "start_time": 0,
-                        "end_time": 3.5,
-                        "duration": 3.5,
-                        "origin_script": "업데이트된 첫 장면입니다.",
-                        "image_url": "https://example.com/updated-scene.jpg"
-                      }
-                    ]
+                    "codeBlocks": []
+                  }
+                ]
+                """.trimIndent()
+
+            private fun payloadWithoutCodeBlocks(): String =
+                """
+                [
+                  {
+                    "title": "차세대 CarPlay 디자인 시스템을 만나보세요",
+                    "summary": "차세대 CarPlay의 핵심 디자인 시스템을 소개합니다.",
+                    "video_key": "$VIDEO_KEY",
+                    "thumbnail_key": "$THUMBNAIL_KEY"
                   }
                 ]
                 """.trimIndent()
