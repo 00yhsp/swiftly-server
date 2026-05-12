@@ -1,6 +1,7 @@
 package com.swiftly.swiftlyserver.internal.n8n
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.validation.annotation.Validated
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/internal/n8n/shorts")
 @Tag(name = "Internal n8n shorts ingest")
+@SecurityRequirement(name = "n8nIngestToken")
 class N8nShortIngestController(
     private val n8nShortIngestService: N8nShortIngestService,
 ) {

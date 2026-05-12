@@ -1,5 +1,6 @@
 package com.swiftly.swiftlyserver.internal.n8n
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
@@ -63,6 +64,8 @@ data class N8nSceneRequest(
     @field:NotBlank
     val imageUrl: String,
 ) {
+    @JsonIgnore
+    @Schema(hidden = true)
     @AssertTrue(message = "end_time must be greater than start_time")
     fun isValidTimeRange(): Boolean = endTime > startTime
 }
