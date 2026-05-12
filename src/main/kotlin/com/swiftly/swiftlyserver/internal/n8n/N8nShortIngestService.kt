@@ -3,7 +3,6 @@ package com.swiftly.swiftlyserver.internal.n8n
 import com.swiftly.swiftlyserver.shorts.ShortVideo
 import com.swiftly.swiftlyserver.shorts.ShortVideoCodeBlock
 import com.swiftly.swiftlyserver.shorts.ShortVideoRepository
-import com.swiftly.swiftlyserver.shorts.ShortVideoScene
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -36,7 +35,6 @@ class N8nShortIngestService(
             title = request.title,
             summary = request.summary,
             thumbnailKey = request.thumbnailKey,
-            scenes = request.scenes.map { scene -> scene.toEntity(shortVideo) },
             codeBlocks = request.codeBlocks.mapIndexed { index, codeBlock -> codeBlock.toEntity(shortVideo, index) },
         )
 
@@ -46,17 +44,6 @@ class N8nShortIngestService(
             created = existingShort == null,
         )
     }
-
-    private fun N8nSceneRequest.toEntity(shortVideo: ShortVideo): ShortVideoScene =
-        ShortVideoScene(
-            shortVideo = shortVideo,
-            sceneIndex = sceneIndex,
-            startTime = startTime,
-            endTime = endTime,
-            duration = duration,
-            originScript = originScript,
-            imageUrl = imageUrl,
-        )
 
     private fun N8nCodeBlockRequest.toEntity(
         shortVideo: ShortVideo,
