@@ -39,7 +39,8 @@ out/
 ### Kotlin ###
 .kotlin
 
-### Gemini ###
+### LLM Context ###
 GEMINI.md
 .gemini/*
 .env
+AGENTS.md

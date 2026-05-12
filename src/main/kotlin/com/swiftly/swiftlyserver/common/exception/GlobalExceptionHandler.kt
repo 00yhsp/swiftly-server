@@ -3,6 +3,7 @@
  */
 package com.swiftly.swiftlyserver.common.exception
 
+import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ProblemDetail
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -20,11 +21,27 @@ class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
         return problemDetail
     }
 
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolationException(e: ConstraintViolationException): ProblemDetail {
+        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.message)
+        problemDetail.title = "Validation Failed"
+        problemDetail.type = URI.create("https://api.swiftly.com/errors/validation-failed")
+        return problemDetail
+    }
+
     @ExceptionHandler(IllegalStateException::class)
     fun handleIllegalStateException(e: IllegalStateException): ProblemDetail {
         val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.message)
         problemDetail.title = "Invalid State"
         problemDetail.type = URI.create("https://api.swiftly.com/errors/invalid-state")
+        return problemDetail
+    }
+
+    @ExceptionHandler(UnauthorizedException::class)
+    fun handleUnauthorizedException(e: UnauthorizedException): ProblemDetail {
+        val problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, e.message)
+        problemDetail.title = "Unauthorized"
+        problemDetail.type = URI.create("https://api.swiftly.com/errors/unauthorized")
         return problemDetail
     }
 
