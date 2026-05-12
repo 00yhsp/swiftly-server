@@ -38,3 +38,7 @@ springdoc:
     path: /api-docs
   kotlin:
     return-nullable-as-required: true
+
+internal:
+  n8n:
+    ingest-token: ${N8N_INGEST_TOKEN:}
