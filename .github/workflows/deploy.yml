@@ -58,6 +58,7 @@ jobs:
                   - DB_NAME=swiftly_db
                   - DB_USERNAME=swiftly_user
                   - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+                  - N8N_INGEST_TOKEN=${{ secrets.N8N_INGEST_TOKEN }}
                   - SPRING_PROFILES_ACTIVE=prod
                 depends_on:
                   db:
@@ -85,3 +86,5 @@ jobs:
             # 컨테이너 실행
             docker compose pull
             docker compose up -d
+            sleep 10
+            docker ps --filter "name=swiftly-server" --filter "status=running" --format "{{.Names}}" | grep -q "^swiftly-server$"

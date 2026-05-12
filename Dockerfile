@@ -25,4 +25,4 @@ USER swiftly
 COPY --from=build /home/gradle/src/build/libs/*.jar app.jar
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default}", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=${SPRING_PROFILES_ACTIVE:-default} -jar app.jar"]
