@@ -20,6 +20,9 @@ spring:
     problemdetails:
       enabled: true
 
+server:
+  forward-headers-strategy: framework
+
 management:
   endpoints:
     web:
