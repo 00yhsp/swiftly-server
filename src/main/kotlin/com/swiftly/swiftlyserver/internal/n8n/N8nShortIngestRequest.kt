@@ -3,6 +3,7 @@ package com.swiftly.swiftlyserver.internal.n8n
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
+import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 
@@ -22,6 +23,11 @@ data class N8nShortIngestRequest(
     @field:NotBlank
     @field:Pattern(regexp = "^thumbnails/.+", message = "must start with thumbnails/")
     val thumbnailKey: String,
+    @get:JsonProperty("duration_seconds")
+    @param:JsonProperty("duration_seconds")
+    @field:Min(1)
+    @field:Schema(description = "Video duration in whole seconds.", example = "78")
+    val durationSeconds: Int,
     @field:Valid
     val codeBlocks: List<N8nCodeBlockRequest> = emptyList(),
 )

@@ -30,6 +30,8 @@ class ShortVideo(
     val videoKey: String,
     @Column(name = "thumbnail_key", nullable = false)
     var thumbnailKey: String,
+    @Column(name = "duration_seconds", nullable = false)
+    var durationSeconds: Int,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,11 +50,13 @@ class ShortVideo(
         title: String,
         summary: String,
         thumbnailKey: String,
+        durationSeconds: Int,
         codeBlocks: List<ShortVideoCodeBlock>,
     ) {
         this.title = title
         this.summary = summary
         this.thumbnailKey = thumbnailKey
+        this.durationSeconds = durationSeconds
         this.codeBlocks.clear()
         this.codeBlocks.addAll(codeBlocks)
         this.updatedAt = Instant.now()
