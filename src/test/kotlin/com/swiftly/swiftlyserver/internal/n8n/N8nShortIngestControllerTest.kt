@@ -67,6 +67,7 @@ class N8nShortIngestControllerTest
                     requireNotNull(savedShort)
                     savedShort.title shouldBe "차세대 CarPlay 디자인 시스템을 만나보세요"
                     savedShort.thumbnailKey shouldBe THUMBNAIL_KEY
+                    savedShort.durationSeconds shouldBe 78
                     shortVideoCodeBlockRepository.countByShortVideoVideoKey(VIDEO_KEY) shouldBe 1
                 }
 
@@ -97,6 +98,7 @@ class N8nShortIngestControllerTest
 
                     requireNotNull(updatedShort)
                     updatedShort.title shouldBe "업데이트된 제목"
+                    updatedShort.durationSeconds shouldBe 60
                     shortVideoCodeBlockRepository.countByShortVideoVideoKey(VIDEO_KEY) shouldBe 0
                 }
 
@@ -124,6 +126,17 @@ class N8nShortIngestControllerTest
 
                     shortVideoCodeBlockRepository.countByShortVideoVideoKey(VIDEO_KEY) shouldBe 0
                 }
+
+                it("duration_seconds가 0 이하이면 400을 반환한다") {
+                    mockMvc
+                        .post("/internal/n8n/shorts") {
+                            header(N8nIngestTokenInterceptor.INGEST_TOKEN_HEADER, "test-ingest-token")
+                            contentType = MediaType.APPLICATION_JSON
+                            content = validPayload().replace("\"duration_seconds\": 78", "\"duration_seconds\": 0")
+                        }.andExpect {
+                            status { isBadRequest() }
+                        }
+                }
             }
         }) {
         companion object {
@@ -138,6 +151,7 @@ class N8nShortIngestControllerTest
                     "summary": "차세대 CarPlay의 핵심 디자인 시스템을 소개합니다.",
                     "video_key": "$VIDEO_KEY",
                     "thumbnail_key": "$THUMBNAIL_KEY",
+                    "duration_seconds": 78,
                     "codeBlocks": [
                       {
                         "title": "Sample code",
@@ -156,6 +170,7 @@ class N8nShortIngestControllerTest
                     "summary": "업데이트된 요약입니다.",
                     "video_key": "$VIDEO_KEY",
                     "thumbnail_key": "$THUMBNAIL_KEY",
+                    "duration_seconds": 60,
                     "codeBlocks": []
                   }
                 ]
@@ -168,7 +183,8 @@ class N8nShortIngestControllerTest
                     "title": "차세대 CarPlay 디자인 시스템을 만나보세요",
                     "summary": "차세대 CarPlay의 핵심 디자인 시스템을 소개합니다.",
                     "video_key": "$VIDEO_KEY",
-                    "thumbnail_key": "$THUMBNAIL_KEY"
+                    "thumbnail_key": "$THUMBNAIL_KEY",
+                    "duration_seconds": 78
                   }
                 ]
                 """.trimIndent()

@@ -60,6 +60,10 @@ jobs:
                   - DB_USERNAME=swiftly_user
                   - DB_PASSWORD=${{ secrets.DB_PASSWORD }}
                   - N8N_INGEST_TOKEN=${{ secrets.N8N_INGEST_TOKEN }}
+                  - R2_ENDPOINT=${{ secrets.R2_ENDPOINT }}
+                  - R2_BUCKET=${{ secrets.R2_BUCKET }}
+                  - R2_ACCESS_KEY_ID=${{ secrets.R2_ACCESS_KEY_ID }}
+                  - R2_SECRET_ACCESS_KEY=${{ secrets.R2_SECRET_ACCESS_KEY }}
                   - SPRING_PROFILES_ACTIVE=prod
                 depends_on:
                   db:

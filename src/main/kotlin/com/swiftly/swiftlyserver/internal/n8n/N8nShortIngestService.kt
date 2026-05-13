@@ -29,12 +29,14 @@ class N8nShortIngestService(
                 summary = request.summary,
                 videoKey = request.videoKey,
                 thumbnailKey = request.thumbnailKey,
+                durationSeconds = request.durationSeconds,
             )
 
         shortVideo.replaceContent(
             title = request.title,
             summary = request.summary,
             thumbnailKey = request.thumbnailKey,
+            durationSeconds = request.durationSeconds,
             codeBlocks = request.codeBlocks.mapIndexed { index, codeBlock -> codeBlock.toEntity(shortVideo, index) },
         )
 
