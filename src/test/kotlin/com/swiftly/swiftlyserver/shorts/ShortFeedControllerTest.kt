@@ -35,7 +35,7 @@ class ShortFeedControllerTest : DescribeSpec() {
         }
 
         describe("GET /shorts/feed") {
-            it("피드 아이템에 제목, 코드블록 유무, 썸네일, 영상 URL, 길이를 포함한다") {
+            it("피드 아이템에 제목, 요약, 코드블록 유무, 썸네일, 영상 URL, 길이를 포함한다") {
                 saveShort(
                     title = "첫 번째 영상",
                     videoKey = "videos/first.mp4",
@@ -58,6 +58,7 @@ class ShortFeedControllerTest : DescribeSpec() {
                         status { isOk() }
                         jsonPath("$.items.length()") { value(2) }
                         jsonPath("$.items[0].title") { value("두 번째 영상") }
+                        jsonPath("$.items[0].summary") { value("두 번째 영상 요약") }
                         jsonPath("$.items[0].has_code_blocks") { value(true) }
                         jsonPath("$.items[0].thumbnail_url") {
                             value("https://signed.example/thumbnails/second.jpg")

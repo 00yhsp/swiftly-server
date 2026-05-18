@@ -44,6 +44,7 @@ class ShortFeedController(
                                     {
                                       "id": 7,
                                       "title": "CarPlay 앱을 더 강력하게 만들기",
+                                      "summary": "iOS 26의 CarPlay에서는 위젯과 Live Activities를 CarPlay와 CarPlay Ultra에 보여줄 수 있습니다.",
                                       "has_code_blocks": true,
                                       "thumbnail_url": "https://example.r2.cloudflarestorage.com/thumbnails/sample.jpg?X-Amz-Signature=...",
                                       "video_url": "https://example.r2.cloudflarestorage.com/videos/sample.mp4?X-Amz-Signature=...",
