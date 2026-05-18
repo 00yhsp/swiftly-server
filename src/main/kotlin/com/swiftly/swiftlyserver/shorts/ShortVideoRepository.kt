@@ -14,6 +14,7 @@ interface ShortVideoRepository : JpaRepository<ShortVideo, Long> {
         select new com.swiftly.swiftlyserver.shorts.ShortVideoFeedProjection(
             shortVideo.id,
             shortVideo.title,
+            shortVideo.summary,
             shortVideo.videoKey,
             shortVideo.thumbnailKey,
             shortVideo.durationSeconds,
@@ -25,6 +26,7 @@ interface ShortVideoRepository : JpaRepository<ShortVideo, Long> {
         group by
             shortVideo.id,
             shortVideo.title,
+            shortVideo.summary,
             shortVideo.videoKey,
             shortVideo.thumbnailKey,
             shortVideo.durationSeconds,
@@ -39,6 +41,7 @@ interface ShortVideoRepository : JpaRepository<ShortVideo, Long> {
         select new com.swiftly.swiftlyserver.shorts.ShortVideoFeedProjection(
             shortVideo.id,
             shortVideo.title,
+            shortVideo.summary,
             shortVideo.videoKey,
             shortVideo.thumbnailKey,
             shortVideo.durationSeconds,
@@ -52,6 +55,7 @@ interface ShortVideoRepository : JpaRepository<ShortVideo, Long> {
         group by
             shortVideo.id,
             shortVideo.title,
+            shortVideo.summary,
             shortVideo.videoKey,
             shortVideo.thumbnailKey,
             shortVideo.durationSeconds,

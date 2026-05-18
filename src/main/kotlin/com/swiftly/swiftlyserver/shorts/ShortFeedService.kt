@@ -43,6 +43,7 @@ class ShortFeedService(
         ShortFeedItemResponse(
             id = id,
             title = title,
+            summary = summary,
             hasCodeBlocks = hasCodeBlocks,
             thumbnailUrl = r2PresignedUrlService.createGetUrl(thumbnailKey),
             videoUrl = r2PresignedUrlService.createGetUrl(videoKey),

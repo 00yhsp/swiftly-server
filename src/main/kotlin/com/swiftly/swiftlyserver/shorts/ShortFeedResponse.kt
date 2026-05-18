@@ -21,6 +21,10 @@ data class ShortFeedItemResponse(
     val id: Long,
     @get:Schema(example = "CarPlay 앱을 더 강력하게 만들기")
     val title: String,
+    @get:Schema(
+        example = "iOS 26의 CarPlay에서는 위젯과 Live Activities를 CarPlay와 CarPlay Ultra에 보여줄 수 있습니다.",
+    )
+    val summary: String,
     @get:JsonProperty("has_code_blocks")
     @get:Schema(description = "Whether this video has at least one code block.")
     val hasCodeBlocks: Boolean,
